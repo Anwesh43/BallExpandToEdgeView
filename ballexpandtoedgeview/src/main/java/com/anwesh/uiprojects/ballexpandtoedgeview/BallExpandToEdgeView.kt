@@ -15,7 +15,7 @@ import android.graphics.Color
 val nodes : Int = 5
 val parts : Int = 4
 val sizeFactor : Float = 2.9f
-val rFactor : Float = 5f
+val rFactor : Float = 4f
 val scGap : Float = 0.02f / parts
 val delay : Long = 20
 val foreColor : Int = Color.parseColor("#673AB7")
@@ -169,12 +169,11 @@ class BallExpandToEdgeView(ctx : Context) : View(ctx) {
 
     data class BallExpandToEdge(var i : Int) {
 
-        private var root : BEENode = BEENode(0)
-        private var curr : BEENode = root
+        private var curr : BEENode = BEENode(0)
         private var dir : Int = 1
 
         fun draw(canvas : Canvas, paint : Paint) {
-            root.draw(canvas, paint)
+            curr.draw(canvas, paint)
         }
 
         fun update(cb : (Float) -> Unit) {
