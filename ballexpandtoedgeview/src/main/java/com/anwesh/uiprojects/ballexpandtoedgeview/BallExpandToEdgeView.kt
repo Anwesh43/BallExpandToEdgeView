@@ -213,4 +213,13 @@ class BallExpandToEdgeView(ctx : Context) : View(ctx) {
             }
         }
     }
+
+    companion object {
+
+        fun create(activity : Activity) : BallExpandToEdgeView {
+            val view : BallExpandToEdgeView = BallExpandToEdgeView(activity)
+            activity.setContentView(view)
+            return view
+        }
+    }
 }
