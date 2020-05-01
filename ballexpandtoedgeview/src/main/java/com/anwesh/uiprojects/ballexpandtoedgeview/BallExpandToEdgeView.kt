@@ -13,9 +13,10 @@ import android.graphics.Canvas
 import android.graphics.Color
 
 val nodes : Int = 5
-val balls : Int = 2
+val parts : Int = 4
 val sizeFactor : Float = 2.9f
 val rFactor : Float = 5f
+val scGap : Float = 0.02f / parts
 val delay : Long = 20
 val foreColor : Int = Color.parseColor("#673AB7")
 val backColor : Int = Color.parseColor("#BDBDBD")
@@ -27,10 +28,10 @@ fun Float.sinify() : Float = Math.sin(this * Math.PI).toFloat()
 
 fun Canvas.drawBallExpandToEdge(i : Int, scale : Float, size : Float, w : Float, paint : Paint) {
     val sf : Float = scale.sinify()
-    val sc1 : Float = sf.divideScale(0, 4)
-    val sc2 : Float = sf.divideScale(1, 4)
-    val sc3 : Float = sf.divideScale(2, 4)
-    val sc4 : Float = sf.divideScale(3, 4)
+    val sc1 : Float = sf.divideScale(0, parts)
+    val sc2 : Float = sf.divideScale(1, parts)
+    val sc3 : Float = sf.divideScale(2, parts)
+    val sc4 : Float = sf.divideScale(3, parts)
     val r : Float = size / rFactor
     save()
     rotate(90f * sc3)
@@ -72,5 +73,25 @@ class BallExpandToEdgeView(ctx : Context) : View(ctx) {
             }
         }
         return true
+    }
+
+    data class State(var scale : Float = 0f, var dir : Float = 0f, var prevScale : Float = 0f) {
+
+        fun update(cb : (Float) -> Unit) {
+            scale += scGap * dir
+            if (Math.abs(scale - prevScale) > 1) {
+                scale = prevScale + dir
+                dir = 0f
+                prevScale = scale
+                cb(prevScale)
+            }
+        }
+
+        fun startUpdating(cb : () -> Unit) {
+            if (dir == 0f) {
+                dir = 1f - 2 * prevScale
+                cb()
+            }
+        }
     }
 }
